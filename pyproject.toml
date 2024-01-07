@@ -5,14 +5,24 @@ build-backend = "setuptools.build_meta"
 [tool.pytest.ini_options]
 testpaths = [
     "tests",
+    "tests/api",
+    "tests/integration",
+    "tests/unit",
+    "tests/e2e",
+]
+markers = [
+    "unit",
+    "e2e",
+    "integration",
+    "api",
 ]
 addopts = [
-    "--cov=src", # generate coverage report for paths
-    "--cov-report=html",
+    "-cov=src", # generate coverage report for paths
+    "-cov-report=html",
     # "--cov-report-path={toxinidir}/.tox/coverage",
     # "--cov-report=xml",
-    "--cov-append",
-    "--verbose", # vebose during test execution
+    "-cov-append",
+    "-v", # vebose during test execution
     "-ra", # coverage report format to all
     "-q" # quit during test execution
 ]
