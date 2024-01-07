@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  jenkins-master:
+    image: jenkins/jenkins:lts
+    container_name: jenkins-master
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins-home:/var/jenkins_home
+    networks:
+      - jenkins-net
+
+  jenkins-slave-1:
+    image: jenkins/jnlp-slave
+    container_name: jenkins-slave-1
+    environment:
+      - JENKINS_URL=http://jenkins-master:8080
+      - JENKINS_SECRET=admin
+      - JENKINS_AGENT_NAME=slave-1
+    networks:
+      - jenkins-net
+    restart: always
+
+  jenkins-slave-2:
+    image: jenkins/jnlp-slave
+    container_name: jenkins-slave-2
+    environment:
+      - JENKINS_URL=http://jenkins-master:8080
+      - JENKINS_SECRET=admin
+      - JENKINS_AGENT_NAME=slave-2
+    networks:
+      - jenkins-net
+    restart: always
+
+networks:
+  jenkins-net:
+    driver: bridge
+
+volumes:
+  jenkins-home:

@@ -1,0 +1,7 @@
+requests==2.26.0
+fastapi
+uvicorn
+httpx==0.25.2
+ujson==5.8.0
+urllib3==1.26.18
+uvicorn==0.24.0.post1 
