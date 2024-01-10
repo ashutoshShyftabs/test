@@ -1,0 +1,27 @@
+# .github/workflows/upload_release_asset.yml
+name: Upload Release Asset
+
+on:
+  workflow_run:
+    workflows: ["Tests"]
+    types:
+      - completed
+
+jobs:
+  upload_release_asset:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          asset_path: <your-asset-path-here>
+          asset_name: <your-asset-name-here>
+          asset_content_type: <your-asset-content-type-here>
+          release_token: ${{ secrets.GITHUB_TOKEN }}

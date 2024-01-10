@@ -1,0 +1,22 @@
+# .github/workflows/git_version_tag.yml
+name: Git Version Tag
+
+on:
+  workflow_run:
+    workflows: ["Tests"]
+    types:
+      - completed
+
+jobs:
+  git_version_tag:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Run Git Version Tag
+        uses: tj-actions/git-version-tag@v4

@@ -1,0 +1,46 @@
+# .github/workflows/your_workflow.yml
+name: Your Workflow
+
+on:
+  push:
+    branches:
+      - 'dev_*'
+
+jobs:
+  test_and_create_jira_ticket:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Run Tests
+        run: |
+          # Run your test commands here
+          # For example:
+          tox -e pytest,flake8,black,mypy,unit,integration,api,e2e
+        continue-on-error: true
+      - name: Create Jira Ticket on Test Failure
+        if: ${{ failure() }}
+        run: |
+          # Use Jira API or a Jira CLI tool to create a new issue
+          # Example using curl:
+          curl -D- -u "${{ secrets.JIRA_USERNAME }}:${{ secrets.JIRA_TOKEN }}" -X POST -H "Content-Type: application/json" \
+          --data '{
+            "fields": {
+              "project": {
+                "key": "YOUR_PROJECT_KEY"
+              },
+              "summary": "Test Failure - ${{ github.repository }}",
+              "description": "Tests failed on branch ${{ github.ref }}. See GitHub Actions workflow for details: ${{ github.workflow_url }}",
+              "issuetype": {
+                "name": "Bug"
+              }
+            }
+          }' \
+          "https://your-jira-instance/rest/api/2/issue/"
+        env:
+          JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
+          JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
